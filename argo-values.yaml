@@ -8,9 +8,3 @@ configs:
           config:
             clientID: <Client ID provided by GitHub>
             clientSecret: <Client Secret provided by GitHub>
-            orgs:
-              - name: <GitHub organization name>
-  rbac: 
-    policy.csv: |
-      g, org:admin, role:admin
-      g, org:backend, role:readonly
