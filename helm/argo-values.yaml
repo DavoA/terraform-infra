@@ -4,7 +4,7 @@ server:
 
 configs:
   cm:
-    url: https://192.168.49.3
+    url: https://192.168.49.4
     dex.config: |
       connectors:
         - type: github
