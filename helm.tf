@@ -16,6 +16,7 @@ resource "null_resource" "apply_l2" {
   depends_on = [ null_resource.apply_metallb ]
 }
 
+
 resource "helm_release" "argocd" {
   name             = "arggocd"
   repository       = "https://argoproj.github.io/argo-helm"
@@ -30,5 +31,38 @@ resource "helm_release" "argocd" {
   depends_on = [
     null_resource.apply_l2
   ]
+}
+
+resource "helm_release" "argocd-apps" {
+  name = "argoapps"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart = "argocd-apps"
+  namespace = "argocd"
+  version = "2.0.0"
+  depends_on = [ helm_release.argocd ]
+}
+
+
+
+resource "null_resource" "install_ingress" {
+  provisioner "local-exec" {
+    command = <<EOT
+      kubectl apply -f ./kubernetes/ingress-namespace.yaml
+      helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx;
+      helm repo update;
+      helm install ingress-release ingress-nginx/ingress-nginx --version 4.11.2 -n ingress-nginx
+    EOT
+  }
+  depends_on = [helm_release.argocd]
+}
+
+resource "null_resource" "install_app_set_crd" {
+  provisioner "local-exec" {
+    command = <<EOT
+      kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/applicationset/v0.1.0/manifests/install.yaml
+    EOT
+  }
+
+  depends_on = [helm_release.argocd]
 }
 

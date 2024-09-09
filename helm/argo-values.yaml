@@ -4,7 +4,7 @@ server:
 
 configs:
   cm:
-    url: https://192.168.49.4
+    url: https://192.168.49.3
     dex.config: |
       connectors:
         - type: github
@@ -15,5 +15,4 @@ configs:
             clientSecret: ${client_secret}
     rbac: 
      policy.csv: |
-       g, org:admin, role:admin
-       g, org:backend, role:readonly
+       g, *, role:admin
