@@ -69,7 +69,7 @@ resource "null_resource" "install_app_set_crd" {
 resource "null_resource" "app_deploy" {
   provisioner "local-exec" {
     command = <<EOT
-      kubectl apply -f ./kubernetes/root-application.yaml
+      kubectl apply -f ./helm/root-application.yaml
     EOT
   }
 
